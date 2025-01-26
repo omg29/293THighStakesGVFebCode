@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/rotation.h"
 
 extern void liftControl();
 extern void nextState();
