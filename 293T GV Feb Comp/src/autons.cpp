@@ -1,8 +1,10 @@
+#include "autons.hpp"
 #include <cmath>
 #include "EZ-Template/util.hpp"
 #include "main.h"
 #include "pros/rtos.hpp"
 #include "lb.hpp"
+#include "intake.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -10,7 +12,7 @@
 /////
 
 // These are out of 127
-const int DRIVE_SPEED = 127;
+const int DRIVE_SPEED = 115;
 const int TURN_SPEED = 90;
 const int SWING_SPEED = 90;
 
@@ -34,245 +36,74 @@ void default_constants() {
   chassis.slew_drive_constants_set(7_in, 80);
 }
 
+// PID Test
+
 void pid_test() {
-  chassis.pid_drive_set(24, DRIVE_SPEED);
+  chassis.pid_wait();
 }
 
-void blue_soloAWP() {
-  /*
-  //SCORE ON ALLIANCE STAKE
-  chassis.pid_drive_set(21, 80);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-1, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(-90, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(9, 40);
-  chassis.pid_wait();
-  nextState();
-  nextState();
-  pros::delay(1000);
-  nextState();
+/*
+  right is pos X
+  forward is pos Y
+  clockwise is pos Theta*/
 
-  //CLAMP MOGO
-  chassis.pid_drive_set(-4, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(35, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-18, 70);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(-6, 70);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(-12, 50);
-  chassis.pid_wait();
-  //pros::delay(500);
-  clamp1.toggle();
-  intake.move(-127);
-  pros::delay(500);
-  intake.move(127);
-  //pros::delay(500);
+// Blue Autons
 
-  //TURN AND GET RING
-  chassis.pid_turn_relative_set(-132, TURN_SPEED *0.5);
-  intake.move(127);
+void blueGoalWP() {
+  // Pickup Alliance Stack
+  // Score on Alliance with Prelaod
+  // Pickup Inner Goal
+  // Score on Inner Goal with Stack Ring
+  // Pickup Auton Line Stack
+  // Pickup Auton Line Goal
+  // Score on Auton Line Goal
+  // Pickup Corner
+  // LB Rush to Ladder
   chassis.pid_wait();
-  //intake ring
-  chassis.pid_drive_set(25, 50);
-  intake.move(127);
-  chassis.pid_wait();
-  intake.move(127);
-  chassis.pid_drive_set(-4, DRIVE_SPEED);;
-  intake.move(127);
-  chassis.pid_wait();
-  intake.move(127);
-
-  //GET MIDDLE RINGS
-  intake.move(127);
-  chassis.pid_turn_relative_set(-80, TURN_SPEED*0.5);
-  intake.move(127);
-  chassis.pid_wait();
-  chassis.pid_drive_set(10, 50);
-  intake.move(127);
-  pros::delay(1000);
-  intake.move(127);
-  pros::delay(1000);
-
-  //TOUCH LADDER
-  chassis.pid_drive_set(-24, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(-45, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(30, DRIVE_SPEED);
-  nextState();
-  nextState();
-  */
-
- chassis.pid_drive_set(-28, DRIVE_SPEED*0.5);
- chassis.pid_wait();
- clamp1.toggle();
- pros::delay(500);
- chassis.pid_drive_set(10, DRIVE_SPEED*0.5);
- chassis.pid_wait();
- intake.move(127);
- 
-
 }
 
-void red_soloAWP() {
-  /*
-  //SCORE ON ALLIANCE STAKE
-  chassis.pid_drive_set(21, 80);
+void blueRingElims() {
+  // Pick up Alliance Stack
+  // Score on Alliance Stake w/ LB
+  // Pick up Goal
+  // Score on Goal with Stack Ring
+  // Pick up 2 Middle Auton Line Rings
+  // Pick up 1 Single Auton Line Ring
+  // Doink Corner
+  // Pick up Corner Rings
+  // LB Ladder Rush
   chassis.pid_wait();
-  chassis.pid_drive_set(-1, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(90, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(9, 40);
-  chassis.pid_wait();
-  nextState();
-  nextState();
-  pros::delay(1000);
-  nextState();
-
-  //CLAMP MOGO
-  chassis.pid_drive_set(-2, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(-35, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-18, 70);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(-6, 70);
-  chassis.pid_wait_quick_chain();
-  chassis.pid_drive_set(-12, 50);
-  chassis.pid_wait();
-  //pros::delay(500);
-  clamp1.toggle();
-  intake.move(-127);
-  pros::delay(500);
-  intake.move(127);
-  //pros::delay(500);
-
-  //TURN AND GET RING
-  chassis.pid_turn_relative_set(132, TURN_SPEED);
-  intake.move(127);
-  chassis.pid_wait();
-  //intake ring
-  chassis.pid_drive_set(25, 50);
-  intake.move(127);
-  chassis.pid_wait();
-  intake.move(127);
-  chassis.pid_drive_set(-4, DRIVE_SPEED);;
-  intake.move(127);
-  chassis.pid_wait();
-  intake.move(127);
-
-  //GET MIDDLE RINGS
-  intake.move(127);
-  chassis.pid_turn_relative_set(80, TURN_SPEED*0.5);
-  intake.move(127);
-  chassis.pid_wait();
-  chassis.pid_drive_set(10, 50);
-  intake.move(127);
-  pros::delay(1000);
-  intake.move(127);
-  pros::delay(1000);
-
-  //TOUCH LADDER
-  chassis.pid_drive_set(-24, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(45, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(30, DRIVE_SPEED);
-  nextState();
-  nextState();
-  */
-
-  chassis.pid_drive_set(-28, DRIVE_SPEED*0.5);
-  chassis.pid_wait();
-  clamp1.toggle();
-  pros::delay(500);
-  chassis.pid_drive_set(10, DRIVE_SPEED*0.5);
-  chassis.pid_wait();
-  intake.move(127);
-
-}
-void blue_right() {
-
 }
 
-void blue_left() {
-  
-}
-void red_left() {
-  
-}
-
-void prog_skills() {
-  //SCORE ON ALLIANCE STAKE
-  nextState();
-  nextState();
-  pros::delay(1000);
-  nextState();
-  pros::delay(250);
-
-  //CLAMP FIRST GOAL
-  /*
-  chassis.pid_drive_set(-15, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(90, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-18, 70);
-  chassis.pid_wait();
-  clamp1.toggle();
-  intake.move(-127);
-  pros::delay(500);
-  intake.move(127);
-  chassis.pid_turn_relative_set(90, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(20, 40);
-  chassis.pid_wait();*/
-
-  //push first goal
-  chassis.pid_drive_set(-20, DRIVE_SPEED);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(110, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-48, 100);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-8, 70);
-  chassis.pid_wait();
-
-  //push second goal
-  chassis.pid_drive_set(65, 100);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(130, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(-48, 80);
-  //chassis.pid_wait();
-  //chassis.pid_drive_set(-8, 70);
-  chassis.pid_wait();
-
-  //push third goal
-  chassis.pid_drive_set(10, 100);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(-25, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(100, 100);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(-45, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(24, 100);
-  chassis.pid_wait();
-  chassis.pid_drive_set(24, 20);
-  chassis.pid_wait();
-  chassis.pid_turn_relative_set(25, TURN_SPEED);
-  chassis.pid_wait();
-  chassis.pid_drive_set(40, 25);
-  chassis.pid_wait();
 
 
+// Red Autons
+
+void redGoalWP() {
+  // Pickup Alliance Stack
+  // Score on Alliance with Prelaod
+  // Pickup Inner Goal
+  // Score on Inner Goal with Stack Ring
+  // Pickup Auton Line Stack
+  // Pickup Auton Line Goal
+  // Score on Auton Line Goal
+  // Pickup Corner
+  // LB Rush to Ladder
+  chassis.pid_wait();
 }
 
+void redRingElims() {
+  // Pick up Alliance Stack
+  // Score on Alliance Stake w/ LB
+  // Pick up Goal
+  // Score on Goal with Stack Ring
+  // Pick up 2 Middle Auton Line Rings
+  // Pick up 1 Single Auton Line Ring
+  // Doink Corner
+  // Pick up Corner Rings
+  // LB Ladder Rush
+  chassis.pid_wait();
+}
 
 
 /* Everything below this is built-in EZ-Template examples*/

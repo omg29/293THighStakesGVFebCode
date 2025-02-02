@@ -1,11 +1,11 @@
 #include "lb.hpp"
 
 //lb
-pros::Motor lb(-2);
-pros::Rotation rotationSensor(13);
+pros::Motor lb(-20);
+pros::Rotation rotationSensor(9);
 
 const int numStates = 3;
-int states[numStates] = {0, 34, 150};
+int states[numStates] = {0, 40, 150};
 int currState = 0;
 int target = 0;
 

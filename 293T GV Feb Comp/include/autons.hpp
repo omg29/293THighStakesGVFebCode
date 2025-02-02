@@ -5,13 +5,11 @@
 extern Drive chassis;
 
 void pid_test();
-void blue_soloAWP();
-void red_soloAWP();
-void blue_right();
-void blue_left();
-void red_right();
-void red_left();
-void prog_skills();
+
+void blueGoalWP();
+void redGoalWP();
+void blueRingElims();
+void redRingElims();
 
 void drive_example();
 void turn_example();

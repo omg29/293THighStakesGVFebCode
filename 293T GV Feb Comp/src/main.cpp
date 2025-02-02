@@ -9,15 +9,17 @@
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
 // https://ez-robotics.github.io/EZ-Template/
-/////rop5--cffrrrrrr
+/////
+
+inline ez::tracking_wheel odomWheel(18, 2.75, 0);
 
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-20, -19, -18},  // Left Chassis Ports (negative port will reverse it!)
-    {17, 15, 16},  // Right Chassis Ports (negative port will reverse it!)
+    {-6, -5, -4},  // Left Chassis Ports (negative port will reverse it!)
+    {3, 2, 1},  // Right Chassis Ports (negative port will reverse it!)
 
-    1,     // IMU Port
+    7,     // IMU Port
     3.25,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     450);   // Wheel RPM
 
@@ -39,6 +41,7 @@ void initialize() {
 
   pros::delay(500);  // Stop the user from doing anything while legacy ports configure
 
+
   //lb
   pros::Task ladyBrownTask(lbAsyncControl);
 
@@ -52,6 +55,9 @@ void initialize() {
 
   // Set the drive to your own constants from autons.cpp!
   default_constants();
+
+  // Horizontal Tracking Wheel Initialize
+  //chassis.odom_tracker_back_set(&odomWheel);
 
   // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
   // chassis.opcontrol_curve_buttons_left_set(pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT);  // If using tank, only the left side is used.
@@ -69,15 +75,12 @@ void initialize() {
     Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example), */
 
     // Add your own autons here!
+    Auton("PID Test\n\nPID Test - drive", pid_test),
+    Auton("Blue Goal Side Solo AWP (left positive)\n\n1 alliance + 1 mogo + 2 mogo\n10 points", blueGoalWP),
+    Auton("Blue Ring Side Elims (right negative)\n\n1 alliance + 5 mogo\n10 points", blueRingElims),
+    Auton("Red Goal Side Solo AWP (right positive)\n\n1 alliance + 1 mogo + 2 mogo\n10 points", redGoalWP),
+    Auton("Red Ring Side Elims (left negative)\n\n1 alliance + 5 mogo\n10 points", redRingElims),
 
-    //Auton("PID Test\n\nPID Test - drive", pid_test),
-    Auton("Blue Right Solo AWP\n\n4x first mogo, 2x second", blue_soloAWP),
-    Auton("Red Left Solo AWP\n\n1x alliance, 2x mogo + ladder", red_soloAWP),
-    //Auton("Blue Right Elims\n\n", blue_right),
-    //Auton("Blue Left Elims\n\n", blue_left),
-    //Auton("Red Right | Goal Rush", red_right),
-    //Auton("Red Left Elims\n\n", red_left),
-    Auton("Programming Skills", prog_skills)
   });
 
   // Initialize chassis and auton selector
@@ -138,6 +141,13 @@ void autonomous() {
   chassis.drive_sensor_reset();               // Reset drive sensors to 0
   chassis.drive_brake_set(MOTOR_BRAKE_HOLD);  // Set motors to hold.  This helps autonomous consistency
 
+  chassis.odom_xyt_set(0, 0, 0); // sets robot to (0,0) and theta 0
+  /*
+  right is pos X
+  forward is pos Y
+  clockwise is pos Theta
+  */
+
   ez::as::auton_selector.selected_auton_call();  // Calls selected auton from autonomous selector
 }
 
@@ -159,6 +169,10 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+//color sort
+std::string currentColor = "adi = goat";
+
 void opcontrol() {
 
   // This is preference to what you like to drive on
@@ -234,8 +248,24 @@ void opcontrol() {
     if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
       nextState();
     }
-    
 
+    //color sort
+    if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){
+      cycleAllianceColor();
+    }
+
+    //print alliance color on controller
+    if(allianceColor == 0){
+      currentColor = "RED";
+    }
+    else if (allianceColor == 1){
+      currentColor = "BLUE";
+    }
+    else{
+      currentColor = "NEUTRAL";
+    }
+
+    master.print(0, 0, "Counter: %d", currentColor);
     
     pros::delay(ez::util::DELAY_TIME);  // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

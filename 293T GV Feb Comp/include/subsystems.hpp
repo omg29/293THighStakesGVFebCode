@@ -12,5 +12,8 @@ inline pros::adi::Pneumatics clamp1('A', false);
 inline pros::adi::Pneumatics intake_piston1('C', false);
 
 //doinker
-inline pros::adi::Pneumatics doinker1('D', false);
+inline pros::adi::Pneumatics doinker1('B', false);
+
+
+
 
