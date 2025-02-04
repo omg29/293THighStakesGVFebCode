@@ -1,3 +1,4 @@
+#include "main.h"
 #include "intake.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/motors.hpp"
@@ -50,9 +51,15 @@ void cycleAllianceColor(){
 }
 
 void asyncIntakeControl(void * param){
+    bool wrongRing = false;
+    int elapsedTime = 0;
+    int ejectTreshold = 4;
+
     while(true){
         //run intake
         intake.move(intakeSpeed);
+        bottomIntake.move(intakeSpeed);
+        
 
         //color sort code
         seenHue = colorSensor.get_hue();
@@ -70,7 +77,29 @@ void asyncIntakeControl(void * param){
         printf("Hue value: %lf \n", colorSensor.get_hue());
         printf("Seen COlor: %lf \n", allianceColor);
 
+        if(!wrongRing){
+            if(allianceColor == 0 && seenColor == "BLUE"){
+                wrongRing = true;
+                elapsedTime = 0;
+            }
+            else if(allianceColor == 1 && seenColor == "RED"){
+                wrongRing = true;
+                elapsedTime = 0;
+            }
+            else if(allianceColor == 2){
+                wrongRing = false;
+            }
+        }
+
+        if(elapsedTime > ejectTreshold && wrongRing){
+            upperIntake.move(0);
+            pros::delay(300);
+            wrongRing = false;
+        }
+
         //delay
         pros::delay(20);
+        elapsedTime += 1; //idk if it should be +20 or +1
+
     }
 }

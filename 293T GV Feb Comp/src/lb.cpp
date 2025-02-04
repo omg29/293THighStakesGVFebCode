@@ -1,4 +1,6 @@
 #include "lb.hpp"
+#include "main.h"
+
 
 //lb
 pros::Motor lb(-20);
