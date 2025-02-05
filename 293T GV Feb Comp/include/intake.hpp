@@ -1,8 +1,11 @@
 #include "main.h"
+#include "pros/motor_group.hpp"
 
 extern pros::Motor bottomIntake;
 
 extern pros::Motor upperIntake;
+
+extern pros::MotorGroup intake;
 
 extern const int RED;
 extern const int BLUE;

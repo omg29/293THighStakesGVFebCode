@@ -6,10 +6,10 @@
 #include "pros/screen.hpp"
 
 //intake motors
-pros::Motor bottomIntake(-13);
+pros::Motor bottomIntake(-14);
 pros::Motor upperIntake(19);
 
-pros::MotorGroup intake{(bottomIntake, upperIntake)};
+pros::MotorGroup intake{-14, 19};
 
 //color sensor
 pros::Optical colorSensor(10);
@@ -57,9 +57,7 @@ void asyncIntakeControl(void * param){
 
     while(true){
         //run intake
-        intake.move(intakeSpeed);
-        bottomIntake.move(intakeSpeed);
-        
+        intake.move(intakeSpeed);        
 
         //color sort code
         seenHue = colorSensor.get_hue();
